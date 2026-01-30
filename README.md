@@ -50,32 +50,83 @@ Ports are **strictly enforced** — apps will fail to start if their port is tak
 
 ## Getting Started
 
+### Step 1: Install Dependencies
+
 ```bash
-# Install dependencies (from root)
+git clone https://github.com/fudoyoki/ai-portal-mfe-example.git
+cd ai-portal-mfe-example
 npm install
-
-# Build shared packages first
-npm run build --workspace=@ai-portal/ui-kit
-npm run build --workspace=@ai-portal/shared-types
-
-# Start all apps in development mode
-npm run dev
 ```
 
-Or run individually:
+### Step 2: Build Shared Packages (required first!)
 
 ```bash
-# Terminal 1: Shell
-cd apps/shell && npm run dev
-
-# Terminal 2: Dashboard MFE
-cd apps/mfe-dashboard && npm run dev
-
-# Terminal 3: BFF
-cd apps/bff && npm run dev
+npm run build -w @ai-portal/shared-types
+npm run build -w @ai-portal/ui-kit
 ```
 
-Then open http://localhost:3000
+### Step 3: Build MFEs
+
+MFEs must be built before running — Module Federation needs the `remoteEntry.js` file.
+
+```bash
+npm run build -w @ai-portal/mfe-dashboard
+```
+
+### Step 4: Run the Application (3 terminals)
+
+**Terminal 1 — Shell (main app, dev mode):**
+```bash
+cd apps/shell
+npm run dev
+# → http://localhost:3000
+```
+
+**Terminal 2 — MFE Dashboard (preview mode, serves built files):**
+```bash
+cd apps/mfe-dashboard
+npm run preview
+# → http://localhost:3001
+```
+
+**Terminal 3 — BFF API (optional):**
+```bash
+cd apps/bff
+npm run dev
+# → http://localhost:4000
+```
+
+### Step 5: Verify
+
+1. Open http://localhost:3000
+2. Click "Dashboard" in the nav
+3. You should see the Dashboard MFE loaded inside the Shell
+
+If you see "Failed to load Dashboard module" → MFE preview isn't running on :3001
+
+---
+
+### ⚠️ Why Preview Mode for MFEs?
+
+Vite Module Federation generates `remoteEntry.js` only at **build time**. So MFEs must be:
+1. **Built** (`npm run build`) — creates `dist/assets/remoteEntry.js`
+2. **Previewed** (`npm run preview`) — serves the built files on their port
+
+The Shell (host) can run `npm run dev` because it *consumes* remotes, not *exposes* them.
+
+---
+
+### Rebuilding After Changes
+
+| What Changed | What To Do |
+|--------------|------------|
+| `packages/shared-types` | Rebuild it → rebuild all apps that depend on it |
+| `packages/ui-kit` | Rebuild it → rebuild MFEs → restart MFE previews |
+| `apps/mfe-dashboard` | Rebuild → restart preview |
+| `apps/shell` | Just refresh browser (hot reload works) |
+| `apps/bff` | Auto-reloads in watch mode |
+
+---
 
 ## Project Structure
 
