@@ -11,8 +11,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@ai-portal/ui-kit": "workspace:*",
-    "@ai-portal/shared-types": "workspace:*",
+    "@ai-portal/ui-kit": "*",
+    "@ai-portal/shared-types": "*",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-router-dom": "^6.28.0"
