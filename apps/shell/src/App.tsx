@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import { Spinner } from '@ai-portal/ui-kit'
-import { AuthProvider, useAuth } from './context/AuthContext'
+import { useAuth } from './context/AuthContext'
 
 // Lazy load MFEs - they're loaded from remote servers at runtime
 const DashboardApp = React.lazy(() => import('mfeDashboard/DashboardApp'))
@@ -157,29 +157,34 @@ function ComingSoon({ name }: { name: string }) {
   )
 }
 
-// Main App component
-export function App() {
+// Routes component - uses auth context
+function AppRoutes() {
   const { user } = useAuth()
 
   return (
-    <AuthProvider>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/dashboard/*"
-            element={
-              <MfeErrorBoundary name="Dashboard">
-                <Suspense fallback={<MfeLoader />}>
-                  <DashboardApp user={user} basePath="/dashboard" />
-                </Suspense>
-              </MfeErrorBoundary>
-            }
-          />
-          <Route path="/chat/*" element={<ComingSoon name="Chat MFE" />} />
-          <Route path="/tools/*" element={<ComingSoon name="Tools MFE" />} />
-        </Routes>
-      </Layout>
-    </AuthProvider>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route
+        path="/dashboard/*"
+        element={
+          <MfeErrorBoundary name="Dashboard">
+            <Suspense fallback={<MfeLoader />}>
+              <DashboardApp user={user} basePath="/dashboard" />
+            </Suspense>
+          </MfeErrorBoundary>
+        }
+      />
+      <Route path="/chat/*" element={<ComingSoon name="Chat MFE" />} />
+      <Route path="/tools/*" element={<ComingSoon name="Tools MFE" />} />
+    </Routes>
+  )
+}
+
+// Main App component - AuthProvider is in main.tsx, wrapping this
+export function App() {
+  return (
+    <Layout>
+      <AppRoutes />
+    </Layout>
   )
 }
