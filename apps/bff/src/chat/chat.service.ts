@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
 
-interface ChatMessage {
+export interface ChatMessage {
   id: string
   role: 'user' | 'assistant'
   content: string
   timestamp: number
 }
 
-interface ChatSession {
+export interface ChatSession {
   id: string
   title: string
   messages: ChatMessage[]
