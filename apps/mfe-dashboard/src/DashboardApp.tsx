@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { Card, Button } from '@ai-portal/ui-kit'
 import type { MfeProps, DashboardStats } from '@ai-portal/shared-types'
@@ -87,7 +86,7 @@ function DashboardSettings() {
 }
 
 // Main exported component - this is what the Shell imports
-export default function DashboardApp({ user, basePath }: MfeProps) {
+export default function DashboardApp({ user, basePath: _basePath }: MfeProps) {
   return (
     <div className="dashboard-mfe">
       <Routes>
