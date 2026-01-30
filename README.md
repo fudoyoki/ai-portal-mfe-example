@@ -170,6 +170,58 @@ sonar-scanner
 4. Add remote to Shell's `vite.config.ts`
 5. Add type declaration to Shell's `src/vite-env.d.ts`
 
+## Docker
+
+### Production Build
+
+```bash
+# Build all images
+docker-compose build
+
+# Run all services
+docker-compose up -d
+
+# Check status
+docker-compose ps
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+```
+
+Services will be available at:
+- Shell: http://localhost:3000
+- MFE Dashboard: http://localhost:3001
+- BFF: http://localhost:4000
+
+### Development with Docker
+
+```bash
+# Run with hot reload (mounts source code)
+docker-compose -f docker-compose.dev.yml up
+```
+
+### Build Individual Images
+
+```bash
+# Build from repo root (context needed for monorepo)
+docker build -f apps/shell/Dockerfile -t ai-portal-shell .
+docker build -f apps/mfe-dashboard/Dockerfile -t ai-portal-mfe-dashboard .
+docker build -f apps/bff/Dockerfile -t ai-portal-bff .
+```
+
+### Image Details
+
+| Image | Base | Size (approx) |
+|-------|------|---------------|
+| Shell | nginx:alpine | ~25MB |
+| MFE Dashboard | nginx:alpine | ~20MB |
+| BFF | node:22-alpine | ~180MB |
+
+All images use **Alpine Linux** for minimal footprint.
+
 ## Tech Stack
 
 - **Frontend:** Vite + React + TypeScript + Tailwind
@@ -177,6 +229,7 @@ sonar-scanner
 - **BFF:** NestJS
 - **Monorepo:** Turborepo + npm workspaces
 - **State:** Zustand (Shell-level)
+- **Containers:** Docker + Alpine Linux
 
 ## License
 
